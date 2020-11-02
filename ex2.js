@@ -19,10 +19,7 @@ const map = (arr, cb) => {
   }, []);
 };
 
-console.log("map: ", map(fibArray, (elem) => {
-    return elem * 2;
-  })
-);
+console.log("map: ", map(fibArray, elem => elem * 2));
 
 const filter = (arr, cb) => {
   return arr.reduce((acc, elem) => {
@@ -30,53 +27,38 @@ const filter = (arr, cb) => {
   }, []);
 };
 
-console.log("filter: ", filter(fibArray, (elem) => {
-    return elem > 10;
-  })
-);
+console.log("filter: ", filter(fibArray, elem => elem > 10));
 
 const find = (arr, cb) => {
   return arr.reduce((acc, elem) => {
-    return cb(elem) ? [...acc, elem] : acc;
-  }, []);
+    if (acc !== undefined && acc !== null) return acc;
+
+    if (cb(elem)) {
+      return elem;
+    }
+  }, undefined);
 };
 
-console.log("find: ", find(fibArray, (elem) => {
-    return elem >= 8;
-  })
-);
+console.log("find: ", find(fibArray, elem => elem >= 8));
 
 const some = (arr, cb) => {
-  const reduced = arr.reduce((acc, elem) => {
-    return cb(elem) ? [...acc, true] : [...acc, false];
-  }, []);
-  const trueElements = filter(reduced, (elem) => {
-    return !elem;
-  });
+  return arr.reduce((acc, elem) => {
+    if (acc) return true;
 
-  return trueElements.length ? true : false;
+    return !!cb(elem);
+  }, false);
 };
 
-console.log("some: ", some(fibArray, (elem) => {
-    return elem > 2;
-  })
-);
+console.log("some: ", some(fibArray, elem => elem > 2));
 
 const every = (arr, cb) => {
-  const reduced = arr.reduce((acc, elem) => {
-    return cb(elem) ? [...acc, true] : [...acc, false];
-  }, []);
+  return arr.reduce((acc, elem) => {
+    if (!acc) return false;
 
-  const falseElements = filter(reduced, (elem) => {
-    return elem;
-  });
-
-  return falseElements.length ? false : true;
+    return !!cb(elem);
+}, true);
 };
 
-console.log("every: ", every(fibArray, (elem) => {
-    return elem > 0;
-  })
-);
+console.log("every: ", every(fibArray, elem => elem > 2 ));
 
 module.exports = { fibArray, map, filter, find, some, every }
